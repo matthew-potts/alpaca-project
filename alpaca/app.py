@@ -6,7 +6,7 @@ app = Chalice(app_name='alpaca')
 
 @app.route('/')
 def index():
-    return {'hello': 'world'}
+    return {'hello': 'goosey'}
 
 
 @app.route('/oversold')
