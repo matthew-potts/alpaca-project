@@ -1,26 +1,27 @@
-import re
 from chalice import Chalice
+import config
+import requests
+from bs4 import BeautifulSoup
 
-app = Chalice(app_name='alpaca-project')
+app = Chalice(app_name='alpaca')
 
 @app.route('/')
 def index():
-    return {'hello': 'goose'}
+    return {'hello': config.BASE_URL}
 
-@app.route('/buy_stocks', methods = ['GET'])
+@app.route('/buy_stock', methods = ['POST'])
 def buy_stock():
     request = app.current_request
     message = request.json_body
-    data = {
-        'symbol': 'AAPL',
-        'qty': 1,
-        'side': 'buy',
-        'type': 'market',
-        'time_in_force': 'gtc'
-    }
+    return {'api_key': 'Your API Key here'}
 
-    return {
-        'message': 'Purchased the list of stocks according to the webscraping process.',
-        'webhook_message': data['symbol']
-    }
+@app.route('/oversold')
+def get_stock(): # gets oversold URL by default; can also switch to overbought_url
+
+    oversold_url = 'https://finviz.com/screener.ashx?v=111&s=ta_oversold&f=exch_nasd'
+    headers = {'User-Agent': config.USER_AGENT}
+    r = requests.get(oversold_url, headers = headers)
+    soup = BeautifulSoup(r.text, 'html.parser')
+    rows = soup.find_all('a', {'class': 'screener-link-primary'})
+    return [row.text for row in rows]
 
