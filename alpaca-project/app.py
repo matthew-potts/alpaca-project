@@ -11,8 +11,6 @@ def index():
 
 @app.route('/buy_stock', methods = ['POST'])
 def buy_stock():
-    request = app.current_request
-    message = request.json_body
     return {'api_key': 'Your API Key here'}
 
 @app.route('/oversold')
